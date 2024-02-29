@@ -23,6 +23,7 @@
         - https://www.haskell.org
         - Notepad++ (Preferences -> Language -> Tab Settings -> Haskell -> Replace by space (4))
 		- VS Code + Haskell extension
+        - https://github.com/Idokorro/haskell
     
     Glasgow Haskell Compiler
         - ghc - compiler
