@@ -1,4 +1,7 @@
+
 {
+  // Automatically created by phoityne-vscode extension.
+
   "version": "2.0.0",
   "presentation": {
     "reveal": "always",
@@ -6,79 +9,41 @@
   },
   "tasks": [
     {
-      "label": "Build (unoptimized)",
-      "type": "shell",
-      "command": "stack build --fast",
-      "group": "build",
-      "presentation": {
-          "focus": true,
-          "panel": "dedicated"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Build (optimized)",
-      "type": "shell",
-      "command": "stack build",
-      "group": "build",
-      "presentation": {
-          "focus": true,
-          "panel": "dedicated"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Install (unoptimized)",
-      "type": "shell",
-      "command": "stack install --fast",
+      // F7
       "group": {
-          "kind": "build",
-          "isDefault": true
+        "kind": "build",
+        "isDefault": true
       },
-      "presentation": {
-          "focus": true,
-          "panel": "dedicated"
-      },
-      "problemMatcher": []
-    },
-    {
-      "label": "Install (optimized)",
+      "label": "haskell build",
       "type": "shell",
-      "command": "stack install",
+      //"command": "cabal configure && cabal build"
+      "command": "stack build"
+    },
+    {
+      // F6
       "group": "build",
-      "presentation": {
-          "focus": true,
-          "panel": "dedicated"
+      "type": "shell",
+      "label": "haskell clean & build",
+      //"command": "cabal clean && cabal configure && cabal build"
+      "command": "stack clean && stack build"
+      //"command": "stack clean ; stack build"  // for powershell
+    },
+    {
+      // F8
+      "group": {
+        "kind": "test",
+        "isDefault": true
       },
-      "problemMatcher": []
+      "type": "shell",
+      "label": "haskell test",
+      //"command": "cabal test"
+      "command": "stack test"
     },
     {
-        "label": "Generate Hoogle database",
-        "type": "shell",
-        "command": "stack hoogle --rebuild",
-        "presentation": {
-            "focus": true,
-            "panel": "dedicated"
-        },
-        "problemMatcher": []
-    },
-    {
-        "label": "Start Hoogle server",
-        "type": "shell",
-        "command": "stack hoogle --server",
-        "presentation": {
-            "reveal": "never",
-            "panel": "dedicated"
-        },
-        "problemMatcher": [],
-        "runOptions": {
-            "runOn": "folderOpen"
-        }
-    },
-    {
+      // F6
       "isBackground": true,
       "type": "shell",
-      "label": "Watch",
+      "label": "haskell watch",
       "command": "stack build --test --no-run-tests --file-watch"
     }
   ]

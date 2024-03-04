@@ -11,7 +11,7 @@ ARG LLVM_VERSION=17
 
 ENV USERNAME=vscode \
     USER_UID=1000 \
-    USER_GID=1000 \
+    USER_GID=984 \
     DEBIAN_FRONTEND=noninteractive \
     GHC_VERSION=${GHC_VERSION} \
     STACK_VERSION=${STACK_VERSION} \
@@ -47,8 +47,6 @@ RUN echo "export PATH=${PATH}" >> /home/${USERNAME}/.profile
 ENV BOOTSTRAP_HASKELL_NONINTERACTIVE=yes \
     BOOTSTRAP_HASKELL_NO_UPGRADE=yes
 
-FROM base as tooling
-
 RUN curl --proto '=https' --tlsv1.2 -sSf https://get-ghcup.haskell.org | sh
 
 # Set the GHC version.
@@ -57,49 +55,5 @@ RUN ghcup install ghc ${GHC_VERSION} --set
 # Install cabal-iinstall
 RUN ghcup install cabal ${CABAL_VERSION} --set
 
-# Update Cabal.
-RUN cabal update && cabal new-install cabal-install
-
-# Configure cabal
-RUN cabal user-config update -f && \
-    sed -i 's/-- ghc-options:/ghc-options: -haddock/g' ~/.cabal/config
-
-# Install stack
-RUN ghcup install stack ${STACK_VERSION} --set
-
-# Set system-ghc, install-ghc and resolver for stack.
-RUN ((stack ghc -- --version 2>/dev/null) || true) && \
-    # Set global defaults for stack.
-    stack config --system-ghc set system-ghc true --global && \
-    stack config --system-ghc set install-ghc false --global && \
-    stack config --system-ghc set resolver ${STACK_RESOLVER}
-
-# Set global custom defaults for stack.
-RUN printf "ghc-options:\n  \"\$everything\": -haddock\n" >> /home/${USERNAME}/.stack/config.yaml
-
 # Install hls
 RUN ghcup install hls ${HLS_VERSION} --set
-
-FROM tooling as packages
-
-# Install global packages.
-# Versions are pinned, since we don't want to accidentally break anything (by always installing latest).
-RUN cabal install --haddock-hoogle --minimize-conflict-set \
-    fsnotify-0.4.1.0 \
-    haskell-dap-0.0.16.0 \
-    ghci-dap-0.0.22.0 \
-    haskell-debug-adapter-0.0.39.0 \
-    hlint-3.6.1 \
-    apply-refact-0.14.0.0 \
-    retrie-1.2.2 \
-    hoogle-5.0.18.3 \
-    ormolu-0.7.2.0
-
-FROM packages as hoogle
-
-# Generate hoogle db
-RUN hoogle generate --download --haskell
-
-ENV DEBIAN_FRONTEND=dialog
-
-ENTRYPOINT ["/bin/bash"]
