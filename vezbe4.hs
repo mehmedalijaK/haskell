@@ -55,8 +55,8 @@ divTen = (/10)
 pripada :: Char -> Bool
 pripada = (`elem` ['A'..'Z'])  -- (1 `elem`)
 
-doMe :: (a -> a) -> a -> a
-doMe f x = f x  -- doMe2
+-- doMe :: (a -> a) -> a -> a
+-- doMe f x =ck f x  -- doMe2
 
 zipWith' :: (a -> b -> c) -> [a] -> [b] -> [c]
 zipWith' _ [] _ = []
